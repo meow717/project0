@@ -1,0 +1,41 @@
+# Root .gitignore — git is initialized here (covers backend/ + frontend/).
+# Each folder also has its own .gitignore; these patterns are a safety net.
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.log
+
+# Node / Next.js (frontend)
+**/node_modules/
+**/.next/
+**/out/
+**/build/
+**/coverage/
+**/.pnp.*
+*.tsbuildinfo
+**/next-env.d.ts
+
+# Python / Django (backend)
+**/__pycache__/
+*.py[oc]
+**/.venv/
+**/*.egg-info/
+**/.pytest_cache/
+**/.ruff_cache/
+**/db.sqlite3
+**/db.sqlite3-journal
+backend/staticfiles/
+backend/media/
+
+# Env files — keep the committed examples, ignore real secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# Deploy
+.vercel
