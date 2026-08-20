@@ -38,7 +38,7 @@ services:
       - key: CSRF_TRUSTED_ORIGINS
         value: https://smartqueue-backend.onrender.com
       - key: CORS_ALLOWED_ORIGINS
-        value: https://project0-app.vercel.app
+        value: https://project0-silk-tau.vercel.app
       - key: PYTHON_VERSION
         value: "3.13"
 
