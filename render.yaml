@@ -5,8 +5,7 @@
 #   2. Connect your GitHub repo (meow717/project0)
 #   3. Render creates the Postgres database + web service automatically
 #   4. Set the required env vars on the web service (see backend/.env.example):
-#      DJANGO_SECRET_KEY, DJANGO_ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS,
-#      CORS_ALLOWED_ORIGINS (frontend URL)
+#      DJANGO_ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, CORS_ALLOWED_ORIGINS
 #
 # Redis/S3 are optional — the app falls back to local memory cache and local
 # file storage when their env vars are absent (see config/settings/prod.py).
@@ -31,19 +30,11 @@ services:
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DJANGO_ALLOWED_HOSTS
-        fromDatabase:
-          name: smartqueue-db
-          property: host
-        # placeholder; user must replace with the actual service URL
-        value: your-backend.onrender.com
+        value: smartqueue-backend.onrender.com
       - key: CSRF_TRUSTED_ORIGINS
-        value: https://your-backend.onrender.com
+        value: https://smartqueue-backend.onrender.com
       - key: CORS_ALLOWED_ORIGINS
-        value: https://your-frontend.vercel.app
-      - key: DATABASE_URL
-        fromDatabase:
-          name: smartqueue-db
-          property: connectionString
+        value: https://project0-app.vercel.app
       - key: PYTHON_VERSION
         value: "3.13"
 
