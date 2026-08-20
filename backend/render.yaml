@@ -1,0 +1,54 @@
+# Render blueprint — one-click backend deploy.
+#
+# How to use:
+#   1. On render.com: New + -> Blueprint
+#   2. Connect your GitHub repo (meow717/project0)
+#   3. Render creates the Postgres database + web service automatically
+#   4. Set the required env vars on the web service (see backend/.env.example):
+#      DJANGO_SECRET_KEY, DJANGO_ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS,
+#      CORS_ALLOWED_ORIGINS (frontend URL)
+#
+# Redis/S3 are optional — the app falls back to local memory cache and local
+# file storage when their env vars are absent (see config/settings/prod.py).
+
+services:
+  - type: web
+    name: smartqueue-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: |
+      uv sync --frozen --no-dev &&
+      uv run python manage.py migrate --noinput &&
+      uv run python manage.py collectstatic --noinput
+    startCommand: uv run gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.prod
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        fromDatabase:
+          name: smartqueue-db
+          property: host
+        # placeholder; user must replace with the actual service URL
+        value: your-backend.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://your-backend.onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://your-frontend.vercel.app
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smartqueue-db
+          property: connectionString
+      - key: PYTHON_VERSION
+        value: "3.13"
+
+databases:
+  - name: smartqueue-db
+    plan: free
+    databaseName: smartqueue
+    user: smartqueue

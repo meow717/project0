@@ -49,6 +49,14 @@ from src.shared.domain.exceptions import (
 api = NinjaAPI(title="Karkh API", version="1.0.0", description="Hexagonal Django + Ninja backend")
 
 # --------------------------------------------------------------------------- #
+# Health check (used by Render / uptime monitors)
+# --------------------------------------------------------------------------- #
+@api.get("/health", response=dict, auth=None)
+def health(request):
+    return {"status": "ok"}
+
+
+# --------------------------------------------------------------------------- #
 # Feature routers
 # --------------------------------------------------------------------------- #
 api.add_router("/auth", accounts_router, tags=["auth"])
