@@ -1,14 +1,16 @@
 """Production settings: Postgres, MinIO (S3) storage, Redis cache, hardened.
 
-Redis/S3/MinIO are optional: if their env vars are absent the app falls back
-to the local memory cache and local file storage so a first deploy on Render's
-free tier works with just a Postgres URL.
+Everything except the core Django vars is optional so a first deploy works on
+card-free hosts (Render free tier, PythonAnywhere, etc.):
+  - no DATABASE_URL  -> SQLite on disk
+  - no REDIS_URL     -> local memory cache
+  - no S3_*          -> local disk storage
 """
 
 from __future__ import annotations
 
 from .base import *  # noqa: F401,F403
-from .base import MIDDLEWARE, env  # noqa: F401
+from .base import BASE_DIR, MIDDLEWARE, env  # noqa: F401
 
 DEBUG = False
 
@@ -20,11 +22,19 @@ MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
-# --- Database: Postgres -----------------------------------------------------
-# DATABASE_URL is required in prod (Render provides it via the Postgres add-on).
-DATABASES = {"default": env.db("DATABASE_URL")}
-DATABASES["default"]["CONN_MAX_AGE"] = env.int("DB_CONN_MAX_AGE", default=60)
-DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
+# --- Database: Postgres, falling back to SQLite for card-free hosts ---------
+_database_url = env("DATABASE_URL", default="")
+if _database_url:
+    DATABASES = {"default": env.db("DATABASE_URL")}
+    DATABASES["default"]["CONN_MAX_AGE"] = env.int("DB_CONN_MAX_AGE", default=60)
+    DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # --- Cache: Redis (optional; local memory cache if REDIS_URL is unset) ------
 _redis_url = env("REDIS_URL", default="")
