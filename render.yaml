@@ -17,10 +17,14 @@ services:
     plan: free
     rootDir: backend
     buildCommand: |
+      curl -LsSf https://astral.sh/uv/install.sh | sh &&
+      export PATH="/opt/render/project/src/.venv/bin:$HOME/.local/bin:$PATH" &&
       uv sync --frozen --no-dev &&
       uv run python manage.py migrate --noinput &&
       uv run python manage.py collectstatic --noinput
-    startCommand: uv run gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: |
+      export PATH="/opt/render/project/src/.venv/bin:$HOME/.local/bin:$PATH" &&
+      uv run gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
     healthCheckPath: /api/health
     envVars:
       - key: DJANGO_SETTINGS_MODULE
