@@ -21,7 +21,11 @@ class JwtTokenService(TokenService):
             subject=user.id,
             token_type="access",
             ttl=self._cfg["ACCESS_TTL"],
-            extra={"email": user.email},
+            extra={
+                "email": user.email,
+                "role": user.role,
+                "business_id": user.business_id,
+            },
         )
         refresh = self._codec.encode(
             subject=user.id,

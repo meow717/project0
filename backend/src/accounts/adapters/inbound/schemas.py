@@ -27,6 +27,8 @@ class UserOut(Schema):
     full_name: str
     is_active: bool
     is_staff: bool
+    role: str
+    business_id: int | None = None
 
 
 class TokenOut(Schema):

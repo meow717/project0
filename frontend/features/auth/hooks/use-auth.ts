@@ -62,5 +62,21 @@ export function useAuth() {
     router.push(ROUTES.login);
   };
 
-  return { user, isAuthenticated, loading, login, signup, logout };
+  /**
+   * Re-issue tokens from the stored refresh token and refresh the stored user.
+   * Used right after business creation so role/business_id claims are fresh.
+   */
+  const refreshSession = async (): Promise<boolean> => {
+    try {
+      const tokens = await authApi.refreshSession();
+      const user = await authApi.me();
+      setSession(user, tokens);
+      return true;
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : t("common.error"));
+      return false;
+    }
+  };
+
+  return { user, isAuthenticated, loading, login, signup, logout, refreshSession };
 }

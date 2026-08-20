@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(uv:*)",
+      "Shell(node -e \"const p=require('./package.json'); console.log('r3f:', p.dependencies['@react-three/fiber']); console.log('drei:', p.dependencies['@react-three/drei']); console.log('three:', p.dependencies['three']);\")",
+      "Shell(npm:*)",
+      "Shell(node -e \"const s=require('fs').readFileSync('.next/static/chunks/2csg6p8f7tp43.css','utf8'); const hasYellow=s.includes('.yellow'); const hasPurple=s.includes('.purple'); console.log('yellow class in css:', hasYellow); console.log('purple class in css:', hasPurple); const y=s.match(/yellow\\:is[^}]*\\}/); console.log(y?y[0].slice(0,200):'no yellow variant util');\")",
+      "Shell(node -e \"const s=require('fs').readFileSync('.next/static/chunks/2csg6p8f7tp43.css','utf8'); const b=s.match(/body\\{[^}]*\\}/); console.log(b?b[0]:'body not found'); const p=s.match(/\\.purple\\{[^}]*?\\}/); console.log(p?p[0].slice(0,250):'purple not found');\")",
+      "Shell(npx next build)",
+      "Shell(node -e \"const s=require('fs').readFileSync('.next/static/chunks/2csg6p8f7tp43.css','utf8'); console.log('BODY:', s.match(/body\\{[^}]*\\}/)?.[0] || 'n/a'); const p=s.match(/\\.purple\\{[^}]*?\\}/); console.log('PURPLE:', p?.[0].slice(0,180) || 'n/a'); const r=s.match(/:root\\{[^}]*?\\}/); console.log('ROOT:', r?.[0].slice(0,160) || 'n/a');\")",
+      "Shell(node -e \"const s=require('fs').readFileSync('.next/static/chunks/1akapvveepl35.css','utf8'); console.log('BODY:', s.match(/body\\{[^}]*\\}/)?.[0] || 'n/a'); const p=s.match(/\\.purple\\{[^}]*?\\}/); console.log('PURPLE:', p?.[0].slice(0,200) || 'n/a'); const r=s.match(/:root\\{[^}]*?\\}/); console.log('ROOT:', r?.[0].slice(0,180) || 'n/a');\")"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

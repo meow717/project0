@@ -1,5 +1,6 @@
 import { api } from "@/lib/api-client";
 import type { AuthResponse, Tokens, User } from "@/lib/types";
+import { useAuthStore } from "@/stores/auth.store";
 
 import type { LoginRequest, RegisterRequest } from "../types";
 
@@ -10,4 +11,8 @@ export const authApi = {
   refresh: (refresh_token: string) =>
     api.post<Tokens>("/auth/refresh", { refresh_token }, { auth: false }),
   me: () => api.get<User>("/auth/me"),
+  refreshSession: () => {
+    const refreshToken = useAuthStore.getState().refreshToken;
+    return api.post<Tokens>("/auth/refresh", { refresh_token: refreshToken }, { auth: false });
+  },
 };

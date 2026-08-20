@@ -28,11 +28,11 @@ export function DirectionToggle() {
       <Button
         variant="outline"
         size="icon"
-        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        onClick={() => setTheme(theme === "purple" ? "yellow" : "purple")}
         aria-label={t("toggle.theme")}
       >
-        <Sun className="size-4 dark:hidden" />
-        <Moon className="hidden size-4 dark:block" />
+        <Sun className="size-4 yellow:hidden" />
+        <Moon className="hidden size-4 yellow:block" />
       </Button>
     </div>
   );

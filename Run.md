@@ -2,6 +2,7 @@ Backend
 
 ```
 cd backend
+uv sync
 uv run python manage.py runserver
 ```
 
@@ -12,6 +13,7 @@ frontend
 
 ```
 cd frontend
+npm i
 npm run dev
 ```
 

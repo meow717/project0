@@ -34,8 +34,10 @@ async function rawFetch(path: string, init: RequestInit, token?: string): Promis
 
 /** Try to refresh the access token once using the stored refresh token. */
 async function tryRefresh(): Promise<boolean> {
-  const { refreshToken, setTokens, clear } = useAuthStore.getState();
-  if (!refreshToken) return false;
+  const { isAuthenticated, refreshToken, setTokens, clear } = useAuthStore.getState();
+  // Never resurrect a session that was explicitly logged out (or never
+  // existed): only refresh while the user is signed in.
+  if (!isAuthenticated || !refreshToken) return false;
 
   const res = await rawFetch("/auth/refresh", {
     method: "POST",
@@ -59,7 +61,10 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const { body, auth = true, ...rest } = options;
   const init: RequestInit = {
     ...rest,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    // FormData is sent as-is so the browser sets the multipart boundary;
+    // anything else is JSON-encoded.
+    body:
+      body === undefined ? undefined : body instanceof FormData ? body : JSON.stringify(body),
   };
 
   const token = auth ? (useAuthStore.getState().accessToken ?? undefined) : undefined;

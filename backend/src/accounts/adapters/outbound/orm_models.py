@@ -13,6 +13,8 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 
+from src.accounts.domain.entities import ROLE_CUSTOMER, ROLES
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -29,11 +31,13 @@ class UserManager(BaseUserManager):
     def create_user(self, email: str, password: str | None = None, **extra):
         extra.setdefault("is_staff", False)
         extra.setdefault("is_superuser", False)
+        extra.setdefault("role", ROLE_CUSTOMER)
         return self._create(email, password, **extra)
 
     def create_superuser(self, email: str, password: str | None = None, **extra):
         extra.setdefault("is_staff", True)
         extra.setdefault("is_superuser", True)
+        extra.setdefault("role", "admin")
         if extra.get("is_staff") is not True or extra.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_staff=True and is_superuser=True")
         return self._create(email, password, **extra)
@@ -44,6 +48,14 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     full_name = models.CharField(max_length=255, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    role = models.CharField(max_length=16, choices=[(r, r) for r in ROLES], default=ROLE_CUSTOMER)
+    business = models.ForeignKey(
+        "businesses.BusinessModel",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="staff_members",
+    )
     date_joined = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

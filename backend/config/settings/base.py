@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     "corsheaders",
     # local features (hexagon)
     "src.accounts",
+    "src.businesses",
+    "src.queue",
+    "src.bookings",
+    "src.notifications",
 ]
 
 # django-unfold admin theme
@@ -110,6 +114,36 @@ AUTH_PASSWORD_VALIDATORS = [
 ADMIN_EMAIL = env("ADMIN_EMAIL", default="admin@admin.com")
 ADMIN_PASSWORD = env("ADMIN_PASSWORD", default="admin123")
 ADMIN_FULL_NAME = env("ADMIN_FULL_NAME", default="Administrator")
+
+# --------------------------------------------------------------------------- #
+# SmartQueue feature settings
+# --------------------------------------------------------------------------- #
+# How far in advance (seconds) a customer is alerted that their turn is coming.
+ALERT_LEAD_SECONDS = env.int("ALERT_LEAD_SECONDS", default=900)
+# TTL of the cached live snapshot (polled by clients every 5s).
+LIVE_SNAPSHOT_TTL_SECONDS = env.int("LIVE_SNAPSHOT_TTL_SECONDS", default=5)
+# Default service duration for new services (seconds).
+DEFAULT_SERVICE_DURATION_SEC = env.int("DEFAULT_SERVICE_DURATION_SEC", default=600)
+
+# --------------------------------------------------------------------------- #
+# Notification delivery (email + SMS senders behind the notification ports)
+# --------------------------------------------------------------------------- #
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="SmartQueue <no-reply@localhost>")
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND",
+    default="django.core.mail.backends.smtp.EmailBackend",
+)
+EMAIL_HOST = env("EMAIL_HOST", default="localhost")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+
+# SMS delivery: "console" logs the message (dev); "provider" selects the
+# real-provider stub (prod). Provider credentials are read per-provider.
+SMS_PROVIDER = env("SMS_PROVIDER", default="console")
+SMS_FROM = env("SMS_FROM", default="")
+SMS_API_KEY = env("SMS_API_KEY", default="")
 
 # --------------------------------------------------------------------------- #
 # JWT (consumed by src/shared/infrastructure/auth.py + the token adapter)

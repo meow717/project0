@@ -17,9 +17,18 @@ function DirectionSync() {
   return null;
 }
 
+/** Custom color themes: "yellow" (default) ⇄ "purple". */
+const THEMES = ["yellow", "purple"];
+
 export function AppProviders({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="yellow"
+      themes={THEMES}
+      enableSystem={false}
+      disableTransitionOnChange={false}
+    >
       <DirectionSync />
       {children}
     </ThemeProvider>

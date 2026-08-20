@@ -37,6 +37,8 @@ class DjangoUserRepository(UserRepository):
             full_name=row.full_name,
             is_active=row.is_active,
             is_staff=row.is_staff,
+            role=row.role,
+            business_id=row.business_id,
             password_hash=row.password,
             created_at=row.date_joined,
             updated_at=row.updated_at,

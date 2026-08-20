@@ -19,12 +19,14 @@ class UserAdmin(ModelAdmin):
         "id",
         "email",
         "full_name",
+        "role",
+        "business",
         "is_active",
         "is_staff",
         "is_superuser",
         "date_joined",
     )
-    list_filter = ("is_active", "is_staff", "is_superuser")
+    list_filter = ("is_active", "is_staff", "is_superuser", "role")
     search_fields = ("email", "full_name")
     ordering = ("id",)
     readonly_fields = ("password", "last_login", "date_joined", "updated_at")
